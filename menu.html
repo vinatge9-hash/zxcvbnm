@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:300,400,500,600,700&display=swap" rel="stylesheet">
+  <!--  -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>niyantri Coffee - Menu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body style="font-family: 'Inter', sans-serif;" class="bg-yellow-50 text-gray-900 w-full min-h-screen">
+  <!-- Navbar -->
+  <header class="w-full fixed top-0 left-0 z-50 bg-black/50 text-white backdrop-blur-sm">
+    <nav class="max-w-full px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="text-2xl">☕</span>
+        <a href="./index.html" class="font-bold text-xl">niyantri</a>
+      </div>
+      <ul class="flex items-center space-x-6 text-sm uppercase tracking-wider">
+        <li><a href="./index.html" class="hover:underline">Home</a></li>
+        <li><a href="./menu.html" class="hover:underline">Menu</a></li>
+        <li><a href="./cart.html" class="hover:underline">Cart</a></li>
+        <li><a href="./about.html" class="hover:underline">About</a></li>
+        <li><a href="./contact.html" class="hover:underline">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="pt-24 w-full px-4">
+    <section class="max-w-full">
+      <div class="text-center mb-6">
+        <h1 class="text-3xl md:text-4xl font-semibold">Menu</h1>
+        <p class="text-gray-600">Sip. Savor. Stay a while.</p>
+      </div>
+      <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+  </main>
+
+  <footer class="w-full bg-black text-white py-6 mt-8">
+    <div class="text-center text-sm">© 2025 niyantri Coffee</div>
+  </footer>
+
+  <script>
+    const items = [
+      { name: 'Espresso', price: 3.00, description: 'Rich and bold classic shot.', image: 'https://images.pexels.com/photos/6166818/pexels-photo-6166818.jpeg?auto=compress&cs=tinysrgb&h=650&w=940' },
+      { name: 'Latte', price: 4.50, description: 'Silky milk with a delicate espresso base.', image: 'https://images.unsplash.com/photo-1648726443546-0a10dbb5ba3c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODkyNDZ8MHwxfHNlYXJjaHw1fHxsYXR0ZSUyMGFydCUyMGluJTIwY3VwfGVufDB8MHx8fDE3NTY2MzQxNzh8MA&ixlib=rb-4.1.0&q=80&w=1080' },
+      { name: 'Cappuccino', price: 4.00, description: 'Balanced with airy foam.', image: 'https://images.pexels.com/photos/3310817/pexels-photo-3310817.jpeg?auto=compress&cs=tinysrgb&h=650&w=940' },
+      { name: 'Americano', price: 3.50, description: 'Espresso diluted with hot water.', image: 'https://pixabay.com/get/g59911baa859a9bf19fe82f85f31964b320bf96d75b30ad51f182e8f469144885064771204325a110eb3fb70784a1063da170e9b287c12d9dfffa4fd12815b366_640.jpg' },
+      { name: 'Mocha', price: 4.75, description: 'Chocolate notes with espresso.', image: 'https://images.unsplash.com/photo-1693996046506-b6571eaa8259?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3ODkyNDZ8MHwxfHNlYXJjaHwzfHxtb2NoYSUyMGN1cHxlbnwwfDB8fHwxNzU2NjM0MTc5fDA&ixlib=rb-4.1.0&q=80&w=1080' }
+    ];
+
+    function addToCart(name, price) {
+      const cart = JSON.parse(localStorage.getItem('niyantri_cart') || '[]');
+      const idx = cart.findIndex(i => i.name === name);
+      if (idx >= 0) cart[idx].qty = (cart[idx].qty || 1) + 1;
+      else cart.push({ name, price, qty: 1 });
+      localStorage.setItem('niyantri_cart', JSON.stringify(cart));
+      // Update navbar cart count
+      const event = new Event('storage');
+      window.dispatchEvent(event);
+      alert(name + ' added to cart');
+    }
+
+    function renderMenu() {
+      const grid = document.getElementById('menu-grid');
+      items.forEach(it => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-lg shadow-lg overflow-hidden';
+        card.innerHTML = `
+          <div class="h-48 overflow-hidden">
+            <img src="${it.image}" alt="${it.name}" class="w-full h-full object-cover" />
+          </div>
+          <div class="p-4">
+            <h3 class="font-semibold text-lg">${it.name} - $${it.price.toFixed(2)}</h3>
+            <p class="text-sm text-gray-600">${it.description}</p>
+            <button onclick="addToCart('${it.name}', ${it.price})" class="mt-3 w-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 rounded">Add to Cart</button>
+          </div>`;
+        grid.appendChild(card);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', renderMenu);
+  </script>
+</body>
+</html>
